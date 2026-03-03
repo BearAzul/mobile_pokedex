@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "pokedex",
-    "slug": "pokedex",
+    "slug": "mobile-pokedex",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -41,6 +41,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "75deea2a-d5ad-4aca-9c83-285cf952c736"
+      }
+    },
+    "owner": "akimdev77"
   }
 }

@@ -24,7 +24,7 @@ const PokeCard = ({ pokemon }) => {
             {pokemon.types.map((poke, index) => (
               <View
                 key={index}
-                className="px-3 py-1 mb-1 rounded-full bg-white/30 backdrop-blur-md w-[64px]"
+                className="px-2 py-1 mb-1 rounded-full bg-white/30 backdrop-blur-md w-[64px]"
               >
                 <Text className="text-xs text-center text-white capitalize font-poppins-reg">
                   {poke.type.name}
@@ -34,7 +34,7 @@ const PokeCard = ({ pokemon }) => {
           </View>
         </View>
 
-        <Image source={{ uri: pokemon.sprites.other['official-artwork'].front_default }} className='absolute w-24 h-24 shadow-lg -bottom-2 -right-2' />
+        <Image source={{ uri: pokemon.sprites.other['official-artwork'].front_default }} className='absolute w-24 h-24 drop-shadow-md -bottom-2 -right-2' />
 
       </View>
 
