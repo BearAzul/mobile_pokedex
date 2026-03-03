@@ -7,7 +7,7 @@ export const usePokemonStore = create((set, get) => ({
   isFetchNextPage: false,
   isLoading: false,
   offset: 0,
-  limit: 6,
+  limit: 20,
 
   getAllPokemon: async (isNextPage = false) => {
     if (isNextPage) {
