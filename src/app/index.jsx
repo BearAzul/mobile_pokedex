@@ -35,6 +35,7 @@ export default function Index() {
         <TextInput
           placeholder="Search pokemon..."
           className="flex-1 bg-transparent text-slate-900 font-poppins-reg"
+          placeholderTextColor={"gray"}
           value={searchQuery}
           onChangeText={setSearchQuery}
           onSubmitEditing={handleSearch}

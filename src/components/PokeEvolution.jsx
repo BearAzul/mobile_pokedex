@@ -28,10 +28,12 @@ const PokeEvolution = ({ pokemon, color }) => {
       <View className="flex-row flex-wrap justify-between">
         {evolutions.map((item, index) => (
           <TouchableOpacity key={`${item.id}-${index}`} className="w-[48%] mb-4"
-            onPress={() => router.push({ pathname: "/details", params: { id: item.id } })}
+            onPress={() => router.push({ pathname: "/details", params: { id: item.id.toString() } })}
           >
             <View
-              className={`p-3 items-center rounded-3xl bg-gray-100 shadow-sm border-2 ${item.name === pokemon.name ? 'border-blue-400' : 'border-transparent'}`}
+              className={`p-3 items-center rounded-3xl bg-gray-100 shadow-sm`}
+
+              style={ item.name === pokemon.name ? {borderColor: color, borderWidth: 2}: {borderColor: "none"}}
             >
               <Text className="text-xs text-gray-400 font-poppins-semibold">
                 #{item.id.padStart(3, '0')}

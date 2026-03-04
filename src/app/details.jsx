@@ -1,9 +1,9 @@
-import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, StatusBar } from 'react-native'
+import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, ActivityIndicator } from 'react-native'
 import { useLocalSearchParams, useRouter } from "expo-router"
 import { usePokemonStore } from '@/store/usePokemonStore.js'
 import { PokemonColors } from '@/constants/PokemonColors.js'
 import { Ionicons } from "@expo/vector-icons"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import PokeAbout from "@/components/PokeAbout.jsx"
 import PokeBaseStats from "@/components/PokeBaseStats.jsx"
 import PokeMoves from "@/components/PokeMoves.jsx"
@@ -13,16 +13,39 @@ import PokeEvolution from "@/components/PokeEvolution.jsx"
 const details = () => {
   const { id } = useLocalSearchParams()
   const router = useRouter()
-  const { pokemonList } = usePokemonStore()
+  const { pokemonList, searchPokemon, isLoading } = usePokemonStore()
 
   const pokemon = pokemonList.find(poke => poke.id.toString() === id);
 
   const [activeTab, setActiveTab] = useState('About');
-
-  const mainType = pokemon.types[0].type.name;
-  const backgroundColor = PokemonColors[mainType] || "#A8A878";
+  const [localPokemon, setLocalPokemon] = useState(null);
 
   const Tabs = ["About", "Stats", "Moves", "Evolution"]
+
+  useEffect(() => {
+    const found = pokemonList.find(poke => poke.id.toString() === id);
+
+    if (found) {
+      setLocalPokemon(found);
+    } else {
+      const fetchData = async () => {
+        const result = await searchPokemon(id);
+        if (result) setLocalPokemon(result);
+      };
+      fetchData();
+    }
+  }, [id, pokemonList])
+
+  if (!localPokemon || isLoading) {
+    return (
+      <View className="items-center justify-center flex-1 bg-white">
+        <ActivityIndicator size="large" color="#48CFB2" />
+      </View>
+    );
+  }
+
+  const mainType = localPokemon.types[0].type.name;
+  const backgroundColor = PokemonColors[mainType] || "#A8A878";
 
   return (
     <View className="flex-1 pt-8" style={{ backgroundColor }}>
@@ -40,9 +63,9 @@ const details = () => {
         <Text className="text-4xl text-white capitalize font-poppins-bold">{pokemon.name}</Text>
 
         <View className="flex-row mt-2">
-          {pokemon.types.map((type, index) => (
+          {pokemon?.types?.map((t, index) => (
             <View key={index} className="px-3 py-1 mr-2 rounded-full bg-white/30">
-              <Text className="text-white capitalize font-poppins-reg">{type.type.name}</Text>
+              <Text className="text-white capitalize font-poppins-reg">{t.type.name}</Text>
             </View>
           ))}
         </View>
