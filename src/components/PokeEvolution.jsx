@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { View, Text, Image, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, ActivityIndicator, ScrollView } from 'react-native';
 import { usePokemonStore } from '@/store/usePokemonStore.js';
-import { useRouter } from "expo-router"
 
 const PokeEvolution = ({ pokemon, color }) => {
-  const router = useRouter()
   const [evolutions, setEvolutions] = useState([]);
   const [loading, setLoading] = useState(true);
   const { getEvolutionChain } = usePokemonStore();
@@ -27,13 +25,11 @@ const PokeEvolution = ({ pokemon, color }) => {
       </Text>
       <View className="flex-row flex-wrap justify-between">
         {evolutions.map((item, index) => (
-          <TouchableOpacity key={`${item.id}-${index}`} className="w-[48%] mb-4"
-            onPress={() => router.push({ pathname: "/details", params: { id: item.id.toString() } })}
-          >
+          <View key={`${item.id}-${index}`} className="w-[48%] mb-4">
             <View
               className={`p-3 items-center rounded-3xl bg-gray-100 shadow-sm`}
 
-              style={ item.name === pokemon.name ? {borderColor: color, borderWidth: 2}: {borderColor: "none"}}
+              style={item.name === pokemon.name ? { borderColor: color, borderWidth: 2 } : { borderColor: "none" }}
             >
               <Text className="text-xs text-gray-400 font-poppins-semibold">
                 #{item.id.padStart(3, '0')}
@@ -47,7 +43,7 @@ const PokeEvolution = ({ pokemon, color }) => {
                 {item.name}
               </Text>
             </View>
-          </TouchableOpacity>
+          </View>
         ))}
       </View>
     </ScrollView>

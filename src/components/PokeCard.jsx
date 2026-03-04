@@ -16,11 +16,19 @@ const PokeCard = ({ pokemon }) => {
       <View
         className="relative"
       >
-        <View style={{ backgroundColor }} className="pt-2 pb-4 px-4 rounded-xl h-[100px] shadow-lg">
-          <Text className='text-lg text-white capitalize font-poppins-semibold'>
+        <View style={{ backgroundColor }} className="pt-2 pb-4 px-4 rounded-xl h-[100px] shadow-lg relative overflow-hidden">
+
+          <Image
+            source={require('@/assets/images/pokeball_icon.png')}
+            className="absolute h-36 w-36 -right-8 -bottom-10 opacity-20" 
+            style={{ tintColor: 'white', resizeMode: 'contain' }} 
+          />
+
+          <Text className='z-10 text-lg text-white capitalize font-poppins-semibold'>
             {pokemon.name}
           </Text>
-          <View className='mt-2'>
+          
+          <View className='z-10 mt-2'>
             {pokemon.types.map((poke, index) => (
               <View
                 key={index}

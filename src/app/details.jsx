@@ -1,9 +1,9 @@
-import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, ActivityIndicator } from 'react-native'
+import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView, StatusBar } from 'react-native'
 import { useLocalSearchParams, useRouter } from "expo-router"
 import { usePokemonStore } from '@/store/usePokemonStore.js'
 import { PokemonColors } from '@/constants/PokemonColors.js'
 import { Ionicons } from "@expo/vector-icons"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import PokeAbout from "@/components/PokeAbout.jsx"
 import PokeBaseStats from "@/components/PokeBaseStats.jsx"
 import PokeMoves from "@/components/PokeMoves.jsx"
@@ -13,40 +13,19 @@ import PokeEvolution from "@/components/PokeEvolution.jsx"
 const details = () => {
   const { id } = useLocalSearchParams()
   const router = useRouter()
-  const { pokemonList, searchPokemon, isLoading } = usePokemonStore()
+  const { pokemonList } = usePokemonStore()
+
+  const pokemon = pokemonList.find(poke => poke.id.toString() === id);
 
   const [activeTab, setActiveTab] = useState('About');
-  const [localPokemon, setLocalPokemon] = useState(null);
+
+  const mainType = pokemon.types[0].type.name;
+  const backgroundColor = PokemonColors[mainType] || "#A8A878";
 
   const Tabs = ["About", "Stats", "Moves", "Evolution"]
 
-  useEffect(() => {
-    const found = pokemonList.find(poke => poke.id.toString() === id);
-
-    if (found) {
-      setLocalPokemon(found);
-    } else {
-      const fetchData = async () => {
-        const result = await searchPokemon(id);
-        if (result) setLocalPokemon(result);
-      };
-      fetchData();
-    }
-  }, [id, pokemonList])
-
-  if (!localPokemon || isLoading) {
-    return (
-      <View className="items-center justify-center flex-1 bg-white">
-        <ActivityIndicator size="large" color="#48CFB2" />
-      </View>
-    );
-  }
-
-  const mainType = localPokemon.types[0].type.name;
-  const backgroundColor = PokemonColors[mainType] || "#A8A878";
-
   return (
-    <View className="flex-1 pt-8" style={{ backgroundColor }}>
+    <View className="relative flex-1 pt-8" style={{ backgroundColor }}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView className="z-20 flex-row items-center justify-between px-6 mt-4">
         <TouchableOpacity onPress={() => router.back()}>
@@ -54,24 +33,30 @@ const details = () => {
             <Ionicons name="arrow-back" size={24} color="white" />
           </View>
         </TouchableOpacity>
-        <Text className="text-xl text-white font-poppins-bold">#{localPokemon.id.toString().padStart(3, '0')}</Text>
+        <Text className="text-xl text-white font-poppins-bold">#{pokemon.id.toString().padStart(3, '0')}</Text>
       </SafeAreaView>
 
       <View className="px-6 pt-2 pb-32 mt-6 mb-10">
-        <Text className="text-4xl text-white capitalize font-poppins-bold">{localPokemon.name}</Text>
+        <Text className="text-4xl text-white capitalize font-poppins-bold">{pokemon.name}</Text>
 
         <View className="flex-row mt-2">
-          {localPokemon?.types?.map((t, index) => (
+          {pokemon.types.map((type, index) => (
             <View key={index} className="px-3 py-1 mr-2 rounded-full bg-white/30">
-              <Text className="text-white capitalize font-poppins-reg">{t.type.name}</Text>
+              <Text className="text-white capitalize font-poppins-reg">{type.type.name}</Text>
             </View>
           ))}
         </View>
       </View>
 
+      <Image
+        source={require('@/assets/images/pokeball_icon.png')}
+        className="absolute -right-20 h-100 w-100 top-40 -rotate-6 opacity-20"
+        style={{tintColor: "white", resizeMode: 'contain' }}
+      />
+
       <View className='flex-1 bg-white rounded-t-[40px] px-6 pt-20'>
         <View className='absolute left-0 right-0 items-center -top-40'>
-          <Image source={{ uri: localPokemon.sprites.other['official-artwork'].front_default }} className='w-64 h-64' style={{ resizeMode: 'contain' }} />
+          <Image source={{ uri: pokemon.sprites.other['official-artwork'].front_default }} className='w-64 h-64' style={{ resizeMode: 'contain' }} />
         </View>
 
         <View className="flex-row justify-between mt-6 mb-6 border-b border-gray-100">
@@ -95,19 +80,19 @@ const details = () => {
 
         <ScrollView showsVerticalScrollIndicator={false} className="mb-4">
           {activeTab === 'About' && (
-            <PokeAbout pokemon={localPokemon} />
+            <PokeAbout pokemon={pokemon} />
           )}
 
           {activeTab === 'Stats' && (
-            <PokeBaseStats pokemon={localPokemon} color={backgroundColor} />
+            <PokeBaseStats pokemon={pokemon} color={backgroundColor} />
           )}
 
           {activeTab === 'Moves' && (
-            <PokeMoves pokemon={localPokemon} color={backgroundColor} />
+            <PokeMoves pokemon={pokemon} color={backgroundColor} />
           )}
 
           {activeTab === "Evolution" && (
-            <PokeEvolution pokemon={localPokemon} color={backgroundColor} />
+            <PokeEvolution pokemon={pokemon} color={backgroundColor} />
           )}
         </ScrollView>
       </View>
