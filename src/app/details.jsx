@@ -15,8 +15,6 @@ const details = () => {
   const router = useRouter()
   const { pokemonList, searchPokemon, isLoading } = usePokemonStore()
 
-  const pokemon = pokemonList.find(poke => poke.id.toString() === id);
-
   const [activeTab, setActiveTab] = useState('About');
   const [localPokemon, setLocalPokemon] = useState(null);
 
