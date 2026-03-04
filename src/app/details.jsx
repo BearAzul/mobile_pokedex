@@ -54,14 +54,14 @@ const details = () => {
             <Ionicons name="arrow-back" size={24} color="white" />
           </View>
         </TouchableOpacity>
-        <Text className="text-xl text-white font-poppins-bold">#{pokemon.id.toString().padStart(3, '0')}</Text>
+        <Text className="text-xl text-white font-poppins-bold">#{localPokemon.id.toString().padStart(3, '0')}</Text>
       </SafeAreaView>
 
       <View className="px-6 pt-2 pb-32 mt-6 mb-10">
-        <Text className="text-4xl text-white capitalize font-poppins-bold">{pokemon.name}</Text>
+        <Text className="text-4xl text-white capitalize font-poppins-bold">{localPokemon.name}</Text>
 
         <View className="flex-row mt-2">
-          {pokemon?.types?.map((t, index) => (
+          {localPokemon?.types?.map((t, index) => (
             <View key={index} className="px-3 py-1 mr-2 rounded-full bg-white/30">
               <Text className="text-white capitalize font-poppins-reg">{t.type.name}</Text>
             </View>
@@ -71,7 +71,7 @@ const details = () => {
 
       <View className='flex-1 bg-white rounded-t-[40px] px-6 pt-20'>
         <View className='absolute left-0 right-0 items-center -top-40'>
-          <Image source={{ uri: pokemon.sprites.other['official-artwork'].front_default }} className='w-64 h-64' style={{ resizeMode: 'contain' }} />
+          <Image source={{ uri: localPokemon.sprites.other['official-artwork'].front_default }} className='w-64 h-64' style={{ resizeMode: 'contain' }} />
         </View>
 
         <View className="flex-row justify-between mt-6 mb-6 border-b border-gray-100">
@@ -95,19 +95,19 @@ const details = () => {
 
         <ScrollView showsVerticalScrollIndicator={false} className="mb-4">
           {activeTab === 'About' && (
-            <PokeAbout pokemon={pokemon} />
+            <PokeAbout pokemon={localPokemon} />
           )}
 
           {activeTab === 'Stats' && (
-            <PokeBaseStats pokemon={pokemon} color={backgroundColor} />
+            <PokeBaseStats pokemon={localPokemon} color={backgroundColor} />
           )}
 
           {activeTab === 'Moves' && (
-            <PokeMoves pokemon={pokemon} color={backgroundColor} />
+            <PokeMoves pokemon={localPokemon} color={backgroundColor} />
           )}
 
           {activeTab === "Evolution" && (
-            <PokeEvolution pokemon={pokemon} color={backgroundColor} />
+            <PokeEvolution pokemon={localPokemon} color={backgroundColor} />
           )}
         </ScrollView>
       </View>
