@@ -1,52 +1,56 @@
 import { useEffect, useState } from 'react';
-import { View, Text, Image, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, Image, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { usePokemonStore } from '@/store/usePokemonStore.js';
+import { useRouter } from "expo-router"
 
 const PokeEvolution = ({ pokemon, color }) => {
+  const router = useRouter()
   const [evolutions, setEvolutions] = useState([]);
   const [loading, setLoading] = useState(true);
   const { getEvolutionChain } = usePokemonStore();
 
-  const getEvolution = async () => {
-    const data = await getEvolutionChain(pokemon.species.url);
-    setEvolutions(data);
-    setLoading(false);
-  };
-  
   useEffect(() => {
+    const getEvolution = async () => {
+      const data = await getEvolutionChain(pokemon.species.url);
+      setEvolutions(data);
+      setLoading(false);
+    };
     getEvolution();
-  }, []);
+  }, [pokemon.id]);
 
   if (loading) return <ActivityIndicator color={color} className="mt-10" />;
 
   return (
-    <View>
-      <View className="items-center">
+    <ScrollView showsVerticalScrollIndicator={false} className="px-4">
+      <Text className="mb-4 text-center text-gray-500 font-poppins-semibold">
+        Evolution Chain
+      </Text>
+      <View className="flex-row flex-wrap justify-between">
         {evolutions.map((item, index) => (
-          <View key={item.id}>
-            <View className="flex-row items-center justify-between w-full p-4 mb-2 bg-gray-100 shadow-md rounded-3xl">
-              <View>
-                <Text className="text-gray-400 font-poppins-semibold">#{item.id.padStart(3, '0')}</Text>
-                <Text className="text-xl text-gray-800 capitalize font-poppins-bold">{item.name}</Text>
-              </View>
+          <TouchableOpacity key={`${item.id}-${index}`} className="w-[48%] mb-4"
+            onPress={() => router.push({ pathname: "/details", params: { id: item.id } })}
+          >
+            <View
+              className={`p-3 items-center rounded-3xl bg-gray-100 shadow-sm border-2 ${item.name === pokemon.name ? 'border-blue-400' : 'border-transparent'}`}
+            >
+              <Text className="text-xs text-gray-400 font-poppins-semibold">
+                #{item.id.padStart(3, '0')}
+              </Text>
               <Image
                 source={{ uri: item.image }}
-                className="w-24 h-24"
+                className="w-20 h-20 my-1"
                 style={{ resizeMode: 'contain' }}
               />
+              <Text className="text-sm text-center text-gray-800 capitalize font-poppins-bold">
+                {item.name}
+              </Text>
             </View>
-
-            {index < evolutions.length - 1 && (
-              <View className="my-2">
-                <Ionicons name="arrow-down" size={24} color={color} />
-              </View>
-            )}
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 export default PokeEvolution;
+

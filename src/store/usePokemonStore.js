@@ -57,26 +57,34 @@ export const usePokemonStore = create((set, get) => ({
   },
 
   getEvolutionChain: async (speciesUrl) => {
-    try {
-      const speciesRes = await axios.get(speciesUrl);
-      const evolutionRes = await axios.get(speciesRes.data.evolution_chain.url);
+  try {
+    const speciesRes = await axios.get(speciesUrl);
+    const evolutionRes = await axios.get(speciesRes.data.evolution_chain.url);
 
-      let chain = [];
-      let current = evolutionRes.data.chain;
+    const extractEvolution = (node) => {
+      const id = node.species.url.split("/").filter(Boolean).pop();
+      
+      const currentPoke = {
+        name: node.species.name,
+        id: id,
+        image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`,
+      };
 
-      while (current) {
-        const id = current.species.url.split("/").filter(Boolean).pop();
-        chain.push({
-          name: current.species.name,
-          id: id,
-          image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`,
-        });
-        current = current.evolves_to[0];
+      if (!node.evolves_to || node.evolves_to.length === 0) {
+        return [currentPoke];
       }
-      return chain;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  },
+
+      const nextEvolutions = node.evolves_to.flatMap(evolutionNode => 
+        extractEvolution(evolutionNode)
+      );
+
+      return [currentPoke, ...nextEvolutions];
+    };
+
+    return extractEvolution(evolutionRes.data.chain);
+  } catch (error) {
+    console.error("Evolution Fetch Error:", error);
+    return [];
+  }
+},
 }));
