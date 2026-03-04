@@ -25,7 +25,7 @@ export default function Index() {
   if (isLoading) return <ActivityIndicator size="large" className="justify-center flex-1" />
 
   return (
-    <View className="flex-1 px-4 pt-6 pb-6 bg-gray-200">
+    <View className="flex-1 px-4 pt-8 pb-6 bg-gray-200">
       <StatusBar barStyle="light-content" />
       <Text className="mx-2 text-2xl font-poppins-semibold">Pokédex</Text>
       <Text className="mx-2 text-sm font-poppins-reg">Explore your world of Pokémon and tracks every species, stat, and ability in the palm of your hand.</Text>

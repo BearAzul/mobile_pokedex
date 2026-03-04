@@ -25,7 +25,7 @@ const details = () => {
   const Tabs = ["About", "Stats", "Moves", "Evolution"]
 
   return (
-    <View className="flex-1 pt-6" style={{ backgroundColor }}>
+    <View className="flex-1 pt-8" style={{ backgroundColor }}>
       <StatusBar barStyle="light-content" />
       <SafeAreaView className="z-20 flex-row items-center justify-between px-6 mt-4">
         <TouchableOpacity onPress={() => router.back()}>
